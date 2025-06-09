@@ -1,0 +1,32 @@
+<script>
+async function updateStatusFromArcGIS() {
+  const url = "https://services8.arcgis.com/3bloE123Alx3yLoC/arcgis/rest/services/Roadway_Safety_Audit_Table_Updated/FeatureServer/0/query?where=Corridor%3D%27Cedar%20Springs%20Road%27&outFields=Status&returnGeometry=false&f=json";
+  
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+
+    const status = data.features[0]?.attributes?.Status;
+
+    const classMap = {
+      "Data Collection": "collection",
+      "Pre-Audit Meeting": "preaudit",
+      "Field Observations": "fieldobs",
+      "Analysis and Countermeasure Selection": "analysis",
+      "Draft Report Development": "draft",
+      "Under Review": "review",
+      "Final Report": "final"
+    };
+
+    const activeClass = classMap[status];
+    if (!activeClass) return;
+
+    document.querySelectorAll('.status').forEach(el => el.classList.remove('active'));
+    document.querySelector(`.status.${activeClass}`)?.classList.add('active');
+  } catch (err) {
+    console.error("Error fetching status from ArcGIS:", err);
+  }
+}
+
+updateStatusFromArcGIS();
+</script>
