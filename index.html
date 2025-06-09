@@ -1,32 +1,99 @@
-<script>
-async function updateStatusFromArcGIS() {
-  const url = "https://services8.arcgis.com/3bloE123Alx3yLoC/arcgis/rest/services/Roadway_Safety_Audit_Table_Updated/FeatureServer/0/query?where=Corridor%3D%27Cedar%20Springs%20Road%27&outFields=Status&returnGeometry=false&f=json";
-  
-  try {
-    const response = await fetch(url);
-    const data = await response.json();
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Project Status</title>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  />
+  <style>
+    body { font-family: sans-serif; padding: 2rem; }
+    .status-icons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      margin-top: 0.5rem;
+    }
+    .status {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 120px;
+      text-align: center;
+      padding: 0.5rem;
+      transition: transform 0.2s ease-in-out;
+    }
+    .status i {
+      font-size: 2rem;
+      margin-bottom: 0.4rem;
+    }
+    .collection { color: #F8A31A; }
+    .preaudit  { color: #FFA500; }
+    .fieldobs  { color: #4682B4; }
+    .analysis  { color: #00456A; }
+    .draft     { color: #6A1B9A; }
+    .review    { color: #2E8B57; }
+    .final     { color: #228B22; }
+    .status.active {
+      background-color: #f0f8ff;
+      border-radius: 8px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+      font-weight: bold;
+      transform: scale(1.05);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%   { box-shadow: 0 0 8px rgba(0,0,0,0.1); }
+      50%  { box-shadow: 0 0 12px rgba(248,163,26,0.6); }
+      100% { box-shadow: 0 0 8px rgba(0,0,0,0.1); }
+    }
+  </style>
+</head>
+<body>
+  <h2>Status for Cedar Springs Road</h2>
+  <div class="status-icons">
+    <div class="status collection"><i class="fas fa-arrow-right"></i>Data Collection</div>
+    <div class="status preaudit"><i class="fas fa-arrow-right"></i>Pre-Audit Meeting</div>
+    <div class="status fieldobs"><i class="fas fa-arrow-right"></i>Field Observations</div>
+    <div class="status analysis"><i class="fas fa-arrow-right"></i>Analysis + Countermeasures</div>
+    <div class="status draft"><i class="fas fa-arrow-right"></i>Draft Report</div>
+    <div class="status review"><i class="fas fa-arrow-right"></i>Under Review</div>
+    <div class="status final"><i class="fas fa-arrow-right"></i>Final Report</div>
+  </div>
 
-    const status = data.features[0]?.attributes?.Status;
+  <script>
+    async function updateStatusFromArcGIS() {
+      const url = "https://services8.arcgis.com/3bloE123Alx3yLoC/arcgis/rest/services/Roadway_Safety_Audit_Table_Updated/FeatureServer/0/query?where=Corridor%3D%27Cedar%20Springs%20Road%27&outFields=Status&returnGeometry=false&f=json";
 
-    const classMap = {
-      "Data Collection": "collection",
-      "Pre-Audit Meeting": "preaudit",
-      "Field Observations": "fieldobs",
-      "Analysis and Countermeasure Selection": "analysis",
-      "Draft Report Development": "draft",
-      "Under Review": "review",
-      "Final Report": "final"
-    };
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+        const status = data.features[0]?.attributes?.Status;
 
-    const activeClass = classMap[status];
-    if (!activeClass) return;
+        const classMap = {
+          "Data Collection": "collection",
+          "Pre-Audit Meeting": "preaudit",
+          "Field Observations": "fieldobs",
+          "Analysis and Countermeasure Selection": "analysis",
+          "Draft Report Development": "draft",
+          "Under Review": "review",
+          "Final Report": "final"
+        };
 
-    document.querySelectorAll('.status').forEach(el => el.classList.remove('active'));
-    document.querySelector(`.status.${activeClass}`)?.classList.add('active');
-  } catch (err) {
-    console.error("Error fetching status from ArcGIS:", err);
-  }
-}
+        const activeClass = classMap[status];
+        if (!activeClass) return;
 
-updateStatusFromArcGIS();
-</script>
+        document.querySelectorAll('.status').forEach(el => el.classList.remove('active'));
+        document.querySelector(`.status.${activeClass}`)?.classList.add('active');
+      } catch (err) {
+        console.error("Error loading status:", err);
+      }
+    }
+
+    updateStatusFromArcGIS();
+  </script>
+</body>
+</html>
