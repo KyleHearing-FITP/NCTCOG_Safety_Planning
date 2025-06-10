@@ -3,90 +3,82 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Curent Phase</title>
+  <title>Current Phase</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-d8f2MQy6a8L7lJomOEow/1qD9qU3bR7MufnXWaYk9c3IfUFcfR1MKbOUbMwqZJ3UzP3XbfP+4gTj0dTZd+kUg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
   <style>
     body {
       font-family: 'Nunito', sans-serif;
       margin: 2rem;
       background-color: #f9f9f9;
     }
-
-    h2 {
-      color: #004a99;
-    }
-
     .status-icons {
       display: flex;
       flex-wrap: nowrap;
       gap: 0;
       margin-top: 1rem;
+      justify-content: start;
       overflow-x: auto;
     }
-
     .status {
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      width: 160px;
+      width: 180px;
+      height: 80px;
+      clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 50%, calc(100% - 20px) 100%, 0 100%);
+      margin-right: -20px;
+      padding: 0 10px;
       text-align: center;
-      padding: 1rem 0.5rem;
-      background-color: #e0f0ff;
-      border-right: 1px solid white;
-      color: #0066cc;
+      background-color: #ccc;
+      color: #333;
       font-weight: 600;
+      transition: transform 0.2s ease-in-out;
+      z-index: 1;
       position: relative;
     }
-
-    .status:last-child {
-      border-right: none;
+    .status span {
+      z-index: 2;
     }
-
-    .status::after {
-      content: '\f061'; /* FontAwesome arrow-right */
-      font-family: 'Font Awesome 6 Free';
-      font-weight: 900;
-      position: absolute;
-      right: -0.6rem;
-      top: 50%;
-      transform: translateY(-50%);
-      color: #0066cc;
-    }
-
-    .status:last-child::after {
-      display: none;
-    }
-
-    .status.active {
-      background-color: #004a99;
+    .status.done {
+      background-color: #2e8b57;
       color: white;
-      font-weight: bold;
-      transform: scale(1.05);
     }
-
-    .status.active::after {
+    .status.current {
+      background-color: #f8a31a;
       color: white;
+    }
+    .status.future {
+      background-color: #e0e0e0;
+      color: #666;
     }
   </style>
 </head>
 <body>
   <h2 id="title">Corridor Status</h2>
-  <div class="status-icons">
-    <div class="status" data-status="Data Collection">Data Collection</div>
-    <div class="status" data-status="Pre-Audit Meeting">Pre-Audit Meeting</div>
-    <div class="status" data-status="Field Observations">Field Observations</div>
-    <div class="status" data-status="Analysis and Countermeasure Selection">Analysis & Selection</div>
-    <div class="status" data-status="Draft Report Development">Draft Report</div>
-    <div class="status" data-status="Under Review">Under Review</div>
-    <div class="status" data-status="Final Report">Final Report</div>
+  <div class="status-icons" id="statusContainer">
+    <div class="status" data-status="Data Collection"><span>Data Collection</span></div>
+    <div class="status" data-status="Pre-Audit Meeting"><span>Pre-Audit Meeting</span></div>
+    <div class="status" data-status="Field Observations"><span>Field Observations</span></div>
+    <div class="status" data-status="Analysis and Countermeasure Selection"><span>Analysis & Selection</span></div>
+    <div class="status" data-status="Draft Report Development"><span>Draft Report</span></div>
+    <div class="status" data-status="Under Review"><span>Under Review</span></div>
+    <div class="status" data-status="Final Report"><span>Final Report</span></div>
   </div>
 
   <script>
+    const statusOrder = [
+      "Data Collection",
+      "Pre-Audit Meeting",
+      "Field Observations",
+      "Analysis and Countermeasure Selection",
+      "Draft Report Development",
+      "Under Review",
+      "Final Report"
+    ];
+
     async function getCorridorStatus(corridor) {
       const where = encodeURIComponent(`Corridor='${corridor}'`);
       const url = `https://services8.arcgis.com/3bloE123Alx3yLoC/arcgis/rest/services/Roadway_Safety_Audit_Table_Updated/FeatureServer/0/query?where=${where}&outFields=Status&returnGeometry=false&f=json`;
@@ -101,12 +93,18 @@
       document.getElementById("title").textContent = `Corridor Status: ${corridor || 'Unknown'}`;
       if (!corridor) return;
 
-      const status = await getCorridorStatus(corridor);
-      if (!status) return;
+      const currentStatus = await getCorridorStatus(corridor);
+      if (!currentStatus) return;
 
-      document.querySelectorAll(".status").forEach(el => {
-        if (el.dataset.status === status) {
-          el.classList.add("active");
+      const currentIndex = statusOrder.indexOf(currentStatus);
+
+      document.querySelectorAll(".status").forEach((el, index) => {
+        if (index < currentIndex) {
+          el.classList.add("done");
+        } else if (index === currentIndex) {
+          el.classList.add("current");
+        } else {
+          el.classList.add("future");
         }
       });
     }
