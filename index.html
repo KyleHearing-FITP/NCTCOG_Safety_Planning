@@ -28,14 +28,7 @@
       justify-content: center;
       width: 180px;
       height: 80px;
-      clip-path: polygon(
-        20px 0,               /* Top left, pushed in for concave */
-        calc(100% - 20px) 0,  /* Top right, pushed in */
-        100% 50%,             /* Middle right point – convex point */
-        calc(100% - 20px) 100%, /* Bottom right */
-        20px 100%,            /* Bottom left */
-        0 50%                 /* Middle left concave point */
-      );      
+      clip-path: polygon(20px 0, calc(100% - 20px) 0, 100% 50%, calc(100% - 20px) 100%, 20px 100%, 40px 50%);      
       margin-right: -20px;
       padding: 0 10px;
       text-align: center;
