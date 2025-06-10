@@ -3,25 +3,31 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Current Phase</title>
+  <title>Curent Phase</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-d8f2MQy6a8L7lJomOEow/1qD9qU3bR7MufnXWaYk9c3IfUFcfR1MKbOUbMwqZJ3UzP3XbfP+4gTj0dTZd+kUg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <style>
+
+  <style>
     body {
       font-family: 'Nunito', sans-serif;
       margin: 2rem;
       background-color: #f9f9f9;
     }
+
+    h2 {
+      color: #004a99;
+    }
+
     .status-icons {
       display: flex;
       flex-wrap: nowrap;
       gap: 0;
       margin-top: 1rem;
-      justify-content: start;
       overflow-x: auto;
     }
+
     .status {
       display: flex;
       flex-direction: column;
@@ -33,39 +39,36 @@
       background-color: #e0f0ff;
       border-right: 1px solid white;
       color: #0066cc;
-      transition: transform 0.2s ease-in-out;
+      font-weight: 600;
       position: relative;
     }
+
     .status:last-child {
       border-right: none;
     }
+
     .status::after {
-      content: '\f061'; /* fa-arrow-right */
+      content: '\f061'; /* FontAwesome arrow-right */
       font-family: 'Font Awesome 6 Free';
       font-weight: 900;
       position: absolute;
-      right: -0.75rem;
+      right: -0.6rem;
       top: 50%;
       transform: translateY(-50%);
       color: #0066cc;
     }
+
     .status:last-child::after {
       display: none;
     }
-    .status i {
-      font-size: 1.8rem;
-      margin-bottom: 0.5rem;
-      color: #0066cc;
-    }
+
     .status.active {
       background-color: #004a99;
       color: white;
       font-weight: bold;
       transform: scale(1.05);
     }
-    .status.active i {
-      color: white;
-    }
+
     .status.active::after {
       color: white;
     }
@@ -74,34 +77,13 @@
 <body>
   <h2 id="title">Corridor Status</h2>
   <div class="status-icons">
-    <div class="status collection" data-status="Data Collection">
-      <i class="fas fa-arrow-right"></i>
-      <div>Data Collection</div>
-    </div>
-    <div class="status preaudit" data-status="Pre-Audit Meeting">
-      <i class="fas fa-arrow-right"></i>
-      <div>Pre-Audit Meeting</div>
-    </div>
-    <div class="status fieldobs" data-status="Field Observations">
-      <i class="fas fa-arrow-right"></i>
-      <div>Field Observations</div>
-    </div>
-    <div class="status analysis" data-status="Analysis and Countermeasure Selection">
-      <i class="fas fa-arrow-right"></i>
-      <div>Analysis & Selection</div>
-    </div>
-    <div class="status draft" data-status="Draft Report Development">
-      <i class="fas fa-arrow-right"></i>
-      <div>Draft Report</div>
-    </div>
-    <div class="status review" data-status="Under Review">
-      <i class="fas fa-arrow-right"></i>
-      <div>Under Review</div>
-    </div>
-    <div class="status final" data-status="Final Report">
-      <i class="fas fa-arrow-right"></i>
-      <div>Final Report</div>
-    </div>
+    <div class="status" data-status="Data Collection">Data Collection</div>
+    <div class="status" data-status="Pre-Audit Meeting">Pre-Audit Meeting</div>
+    <div class="status" data-status="Field Observations">Field Observations</div>
+    <div class="status" data-status="Analysis and Countermeasure Selection">Analysis & Selection</div>
+    <div class="status" data-status="Draft Report Development">Draft Report</div>
+    <div class="status" data-status="Under Review">Under Review</div>
+    <div class="status" data-status="Final Report">Final Report</div>
   </div>
 
   <script>
@@ -133,3 +115,4 @@
   </script>
 </body>
 </html>
+
