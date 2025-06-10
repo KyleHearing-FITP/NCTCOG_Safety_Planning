@@ -19,20 +19,21 @@
       flex-wrap: nowrap;
       gap: 0;
       margin-top: 1rem;
-      justify-content: start;
+      justify-content: 20px;
       overflow-x: auto;
+      width: 100%;
     }
     .status {
       display: flex;
       align-items: center;
       justify-content: center;
-      min-width: 180px;
+      min-width: 160px;
       width: max-content;
       max-width: 250px;
       height: 80px;
       clip-path: polygon(20px 0, calc(100% - 20px) 0, 100% 50%, calc(100% - 20px) 100%, 20px 100%, 40px 50%);      
       margin-right: -20px;
-      padding: 0 15px; /* Increased padding for better text spacing */
+      padding: 0 40 px;
       text-align: center;
       background-color: #ccc;
       color: #333;
@@ -43,6 +44,7 @@
     }
     .status span {
       z-index: 2;
+      font-size: 12px;
     }
     .status.done {
       background-color: #447604;
