@@ -3,53 +3,72 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Corridor Status</title>
+  <title>Current Phase</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-d8f2MQy6a8L7lJomOEow/1qD9qU3bR7MufnXWaYk9c3IfUFcfR1MKbOUbMwqZJ3UzP3XbfP+4gTj0dTZd+kUg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <style>
+    body {
+      font-family: 'Nunito', sans-serif;
+      margin: 2rem;
+      background-color: #f9f9f9;
+    }
     .status-icons {
       display: flex;
-      flex-wrap: wrap;
-      gap: 1.5rem;
-      margin-top: 0.5rem;
-      font-family: sans-serif;
+      flex-wrap: nowrap;
+      gap: 0;
+      margin-top: 1rem;
       justify-content: start;
+      overflow-x: auto;
     }
     .status {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      width: 120px;
+      width: 160px;
       text-align: center;
-      padding: 0.5rem;
+      padding: 1rem 0.5rem;
+      background-color: #e0f0ff;
+      border-right: 1px solid white;
+      color: #0066cc;
       transition: transform 0.2s ease-in-out;
+      position: relative;
+    }
+    .status:last-child {
+      border-right: none;
+    }
+    .status::after {
+      content: '\f061'; /* fa-arrow-right */
+      font-family: 'Font Awesome 6 Free';
+      font-weight: 900;
+      position: absolute;
+      right: -0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #0066cc;
+    }
+    .status:last-child::after {
+      display: none;
     }
     .status i {
-      font-size: 2rem;
-      margin-bottom: 0.4rem;
-      display: block;
+      font-size: 1.8rem;
+      margin-bottom: 0.5rem;
+      color: #0066cc;
     }
-    .collection  { color: #F8A31A; }
-    .preaudit    { color: #FFA500; }
-    .fieldobs    { color: #4682B4; }
-    .analysis    { color: #00456A; }
-    .draft       { color: #6A1B9A; }
-    .review      { color: #2E8B57; }
-    .final       { color: #228B22; }
     .status.active {
-      background-color: #f0f8ff;
-      border-radius: 8px;
-      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+      background-color: #004a99;
+      color: white;
       font-weight: bold;
       transform: scale(1.05);
-      animation: pulse 2s infinite;
     }
-    @keyframes pulse {
-      0%   { box-shadow: 0 0 8px rgba(0,0,0,0.1); }
-      50%  { box-shadow: 0 0 12px rgba(248,163,26,0.6); }
-      100% { box-shadow: 0 0 8px rgba(0,0,0,0.1); }
+    .status.active i {
+      color: white;
     }
-  </style>
+    .status.active::after {
+      color: white;
+    }
 </head>
 <body>
   <h2 id="title">Corridor Status</h2>
