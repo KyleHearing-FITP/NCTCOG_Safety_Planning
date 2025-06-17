@@ -16,23 +16,21 @@
     }
     .status-icons {
       display: flex;
-      flex-wrap: nowrap;
+      flex-direction: column;
       gap: 0;
       margin-top: 1rem;
-      overflow-x: auto;
-      width: 100%;
-      justify-content: center;
+      align-items: center;
+      gap: 0;
+      margin-top: 1rem;
     }
     .status {
       display: flex;
       align-items: center;
       justify-content: center;
-      min-width: 50px;
-      width: max-content;
-      max-width: 160px;
-      height: 80px;
-      clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 50%, calc(100% - 10px) 100%, 10px 100%, 20px 50%);      
-      margin-right: -10px;
+      width: 200px;
+      height: 100px;
+      clip-path: polygon(0 10px, 0 90px, 50% 100%, 100% 90px, 100% 10px, 50% 0);
+      margin-bottom: -10px;
       padding: 0 50px;
       text-align: center;
       background-color: #ccc;
@@ -44,7 +42,7 @@
     }
     .status span {
       z-index: 2;
-      font-size: 12px;
+      font-size: 16px;
     }
     .status.done {
       background-color: #00456a;
