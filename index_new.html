@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Current Phase</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-d8f2MQy6a8L7lJomOEow/1qD9qU3bR7MufnXWaYk9c3IfUFcfR1MKbOUbMwqZJ3UzP3XbfP+4gTj0dTZd+kUg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    body {
+      font-family: 'Nunito', sans-serif;
+      margin: 2rem;
+      background-color: #ffffff;
+    }
+    .status-icons {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+      margin-top: 1rem;
+    }
+    .status {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 200px;
+      height: 70px;
+      clip-path: polygon(0 0, 50% 10px, 100% 0, 100% 60px, 50% 70px, 0 60px);
+      padding: 0 50px;
+      text-align: center;
+      background-color: #ccc;
+      color: #333;
+      font-weight: 600;
+      transition: transform 0.2s ease-in-out;
+      z-index: 1;
+      position: relative;
+    }
+    .status span {
+      z-index: 2;
+      font-size: 16px;
+    }
+    .status.done {
+      background-color: #00456a;
+      color: white;
+    }
+    .status.current {
+      background-color: #B0413E;
+      color: white;
+    }
+    .status.future {
+      background-color: #ededed;
+      color: #00456a;
+    }
+
+    /* Legend Styles */
+    .centering {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 2rem;
+      color: black;
+    }
+
+    .box-container {
+      display: flex;
+      gap: 40px;
+      text-align: center;
+    }
+
+    .box {
+      width: 50px;
+      height: 50px;
+      margin: 0 auto 5px;
+      border: 1px solid #3e4654;
+    }
+
+    .box-caption {
+      font-size: 14px;
+    }
+
+    .completed {
+      background-color: #00456a;
+    }
+
+    .in-progress {
+      background-color: #B0413E;
+    }
+
+    .future-step {
+      background-color: #ededed;
+    }
+  </style>
+</head>
+<body>
+  <div class="status-icons" id="statusContainer">
+    <div class="status" data-status="Data Collection"><span>Data Collection</span></div>
+    <div class="status" data-status="Pre-Audit Meeting"><span>Pre-Audit Meeting</span></div>
+    <div class="status" data-status="Field Observations"><span>Field Observations</span></div>
+    <div class="status" data-status="Analysis and Countermeasure Selection"><span>Analysis & Selection</span></div>
+    <div class="status" data-status="Draft Report Development"><span>Draft Report</span></div>
+    <div class="status" data-status="Under Review"><span>Under Review</span></div>
+    <div class="status" data-status="Final Report"><span>Final Report</span></div>
+  </div>
+
+  <!-- Legend -->
+  <div class="centering">
+    <div class="box-container">
+      <div>
+        <div class="box completed"></div>
+        <div class="box-caption">Completed</div>
+      </div>
+      <div>
+        <div class="box in-progress"></div>
+        <div class="box-caption">In Progress</div>
+      </div>
+      <div>
+        <div class="box future-step"></div>
+        <div class="box-caption">Future Steps</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const statusOrder = [
+      "Data Collection",
+      "Pre-Audit Meeting",
+      "Field Observations",
+      "Analysis and Countermeasure Selection",
+      "Draft Report Development",
+      "Under Review",
+      "Final Report"
+    ];
+
+    async function getCorridorStatus(corridor) {
+      const where = encodeURIComponent(`Corridor='${corridor}'`);
+      const url = `https://services8.arcgis.com/3bloE123Alx3yLoC/arcgis/rest/services/Roadway_Safety_Audit_Table_Updated/FeatureServer/0/query?where=${where}&outFields=Status&returnGeometry=false&f=json`;
+      const response = await fetch(url);
+      const data = await response.json();
+      return data.features?.[0]?.attributes?.Status || null;
+    }
+
+    async function highlightStatus() {
+      const params = new URLSearchParams(window.location.search);
+      const corridor = params.get("corridor");
+      if (!corridor) return;
+
+      const currentStatus = await getCorridorStatus(corridor);
+      if (!currentStatus) return;
+
+      const currentIndex = statusOrder.indexOf(currentStatus);
+
+      document.querySelectorAll(".status").forEach((el, index) => {
+        if (index < currentIndex) {
+          el.classList.add("done");
+        } else if (index === currentIndex) {
+          el.classList.add("current");
+        } else {
+          el.classList.add("future");
+        }
+      });
+    }
+
+    highlightStatus();
+  </script>
+</body>
+</html>
