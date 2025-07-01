@@ -121,6 +121,7 @@
       </div>
     </div>
   </div>
+  <div id="last-updated" style="text-align: center; margin-top: 1rem; font-size 14px;"></div>div>
 
   <script>
     const statusOrder = [
@@ -135,7 +136,7 @@
 
     async function getCorridorStatus(corridor) {
       const where = encodeURIComponent(`Corridor='${corridor}'`);
-      const url = `https://services8.arcgis.com/3bloE123Alx3yLoC/arcgis/rest/services/Roadway_Safety_Audit_Table_Updated/FeatureServer/0/query?where=${where}&outFields=Status&returnGeometry=false&f=json`;
+      const url = `https://services8.arcgis.com/3bloE123Alx3yLoC/arcgis/rest/services/Roadway_Safety_Audit_Table_Updated/FeatureServer/0/query?where=${where}&outFields=Status,Date_Last_Update&returnGeometry=false&f=json`;
       const response = await fetch(url);
       const data = await response.json();
       return data.features?.[0]?.attributes?.Status || null;
@@ -160,8 +161,12 @@
           el.classList.add("future");
         }
       });
+      if (dateLastUpdate) {
+        const date = new Date(dateLastUpdate);
+        const formatted = date.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+        document.getElementById("last-updated").textContent = `Last Updated: ${formatted}`;
+      }
     }
-
     highlightStatus();
   </script>
 </body>
