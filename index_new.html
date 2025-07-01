@@ -147,8 +147,12 @@
       const corridor = params.get("corridor");
       if (!corridor) return;
 
-      const currentStatus = await getCorridorStatus(corridor);
-      if (!currentStatus) return;
+
+      const attributes = await getCorridorStatus(corridor);
+      if (!attributes) return;
+  
+      const currentStatus = attributes.Status;
+      const dateLastUpdate = attributes.Date_Last_Update;
 
       const currentIndex = statusOrder.indexOf(currentStatus);
 
